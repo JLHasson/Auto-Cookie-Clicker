@@ -3,8 +3,6 @@
 #Uses Splinter API found at http://splinter.cobrateam.info/
 
 from splinter import Browser
-from bs4 import BeautifulSoup
-import urllib2
 
 #object to be clicked
 cookie = browser.find_by_id('bigCookie')
