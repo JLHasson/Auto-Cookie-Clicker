@@ -22,7 +22,6 @@ buildings = {
 
 def main ():
 	startBrowser() #Create browsing session
-	pageSource = getPageData()  #Get data of the page
 	while True:
 		cookie.click()
 		purchaseUpgrade(pageSource)		
@@ -31,7 +30,7 @@ def startBrowser():
 	browser = Browser('chrome')
 	browser.visit('http://orteil.dashnet.org/cookieclicker/')
 
-def whichUpgrade(pageSource):
+def whichUpgrade():
 	"""
 	This function will calculate which upgrade to be purchased next between
 	two values.
@@ -43,10 +42,12 @@ def whichUpgrade(pageSource):
 	
 	Returns id of next upgrade to purchase, and cost of that purchase.
 	"""
-	
-	
+	upgradeReturns = []
+	for i in range(0, 9):
+		currentReturn = calcReturn(i)
+		upgradeReturns = upgradeReturns + currentReturn[]
 
-def purchaseUpgrade(upgrade, cost, pageSource):
+def purchaseUpgrade(upgrade, cost):
 	"""
 	This function will perform the action of purchasing the next upgrade. 
 	It will take the returned value from whichUpgrade() as two parameters
@@ -58,18 +59,25 @@ def purchaseUpgrade(upgrade, cost, pageSource):
 	
 	
 
-	whichUpgrade(pageSource)
+	whichUpgrade()
 
-def getPageData():
-	url = "http://orteil.dashnet.org/cookieclicker/"
-	page = urllib2.urlopen(url)
-	soup = BeautifulSoup(page.read()) #Object holding source code of cookie clicker
-	return soup
-
-def calcReturn(upgradeId, pageSource):
+def calcReturn(upgradeId):
+	# Grabbing all needed elements off page based on current upgrade
 	nextUpgrade = upgradeId++
 	productId = "product" + str(upgradeId)
 	nextProductId = "product" + str(nextUpgrade)
-	upgradeDiv = pageSource.find("div", id=productId)
-	
-	
+	currentProductPrice = find_by_xpath('//*[@id="' + productId + '"]/div[2]/span"')
+	nextProductPrice = find_by_xpath('"//*[@id="' + nextProductId + '"]/div[2]/span"')
+	currentCPSstring = find_by_xpath('//*[@id="cookies"]/div') # Returns "per second : ___"
+	currentCPS = currentCPSstring.split() # Split returned string
+	currentCPS = float(currentCPS[13:])	# Retrieve only numbers at the end of the string and convert to float
+		
+
+def getCPS (): # Alternative to above method
+	"""
+	The advantage of this method to the other is that in this method
+	the current CPS is stored in memory rather than having to scrap
+	the page each time you need the current CPS. This adds efficiency
+	to the program.
+	"""
+	totalCPS = ((buildings["curser"][0] * buildings["curser"][1]) + (buildings["grandma"][0] * buildings["grandma"][1]) + (buildings["farm"][0] * buildings["farm"][1]) + (buildings["factory"][0] * buildings["factory"][1]) + (buildings["mine"][0] * buildings["mine"][1]) + (buildings["shipment"][0] * buildings["shipment"][1]) + (buildings["alchemy"][0] * buildings["alchemy"][1]) + (buildings["portal"][0] * buildings["portal"][1]) + (buildings["time"][0] * buildings["time"][1]) + (buildings["antimatter"][0] * buildings["antimatter"][1]))
